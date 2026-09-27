@@ -1,16 +1,26 @@
-//M - task
-type SquareObject = {
-  number: number;
-  square: number;
-};
-
-function getSquareNumbers(arr: number[]): SquareObject[] {
-  return arr.map((num: number) => ({
-    number: num,
-    square: num * num,
-  }));
+//N - Task
+function palindromCheck(str: string): boolean {
+  const reversed = str.split("").reverse().join("");
+  return str === reversed;
 }
-console.log(getSquareNumbers([1, 2, 3]));
+
+// Misollar:
+console.log(palindromCheck("dad")); // true
+console.log(palindromCheck("son")); // false
+
+//M - task
+// type SquareObject = {
+//   number: number;
+//   square: number;
+// };
+
+// function getSquareNumbers(arr: number[]): SquareObject[] {
+//   return arr.map((num: number) => ({
+//     number: num,
+//     square: num * num,
+//   }));
+// }
+// console.log(getSquareNumbers([1, 2, 3]));
 
 // //L task
 
