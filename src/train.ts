@@ -1,12 +1,37 @@
-//N - Task
-function palindromCheck(str: string): boolean {
-  const reversed = str.split("").reverse().join("");
-  return str === reversed;
+//O - Task
+function calculateSumOfNumbers(arr: any[]): number {
+  let sum: number = 0;
+
+  arr.forEach((item) => {
+    if (typeof item === "number") {
+      // Oddiy son
+      sum += item;
+    } else if (typeof item === "string" && !isNaN(Number(item))) {
+      // String bo‘lsa va son ko‘rinishida bo‘lsa
+      sum += Number(item);
+    } else if (typeof item === "object" && item !== null && "son" in item) {
+      // Object ichida 'son' property bo‘lsa
+      sum += Number((item as { son: number }).son);
+    }
+    // true/false yoki boshqa qiymatlar qo‘shilmaydi
+  });
+
+  return sum;
 }
 
-// Misollar:
-console.log(palindromCheck("dad")); // true
-console.log(palindromCheck("son")); // false
+// Misol:
+console.log(calculateSumOfNumbers([10, "10", { son: 10 }, true, 35]));
+// Natija: 45
+
+// //N - Task
+// function palindromCheck(str: string): boolean {
+//   const reversed = str.split("").reverse().join("");
+//   return str === reversed;
+// }
+
+// // Misollar:
+// console.log(palindromCheck("dad")); // true
+// console.log(palindromCheck("son")); // false
 
 //M - task
 // type SquareObject = {

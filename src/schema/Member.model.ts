@@ -1,16 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import * as memberEnums from "../libs/enums/member.enums";
-
-const MemberStatus =
-  (memberEnums as any).MemberStatus ??
-  (memberEnums as any).MemberStatusEnum ??
-  (memberEnums as any).default?.MemberStatus ??
-  (memberEnums as any).default?.MemberStatusEnum;
-const MemberType =
-  (memberEnums as any).MemberType ??
-  (memberEnums as any).MemberTypeEnum ??
-  (memberEnums as any).default?.MemberType ??
-  (memberEnums as any).default?.MemberTypeEnum;
+import { MemberStatus, MemberType } from "../libs/enums/member.enums";
 
 const memberSchema = new Schema(
   {
@@ -19,16 +8,19 @@ const memberSchema = new Schema(
       enum: MemberType,
       default: MemberType.USER,
     },
+
     memberStatus: {
       type: String,
       enum: MemberStatus,
       default: MemberStatus.ACTIVE,
     },
+
     memberNick: {
       type: String,
       index: { unique: true, sparse: true },
       required: true,
     },
+
     memberPhone: {
       type: String,
       index: { unique: true, sparse: true },
@@ -39,6 +31,7 @@ const memberSchema = new Schema(
       select: false,
       required: true,
     },
+
     memberAddress: {
       type: String,
     },
@@ -56,8 +49,6 @@ const memberSchema = new Schema(
       default: 0,
     },
   },
-  { timestamps: true },
-  // updatedAt, createdAt
+  { timestamps: true }, // updatedAt, createdAt
 );
-
 export default mongoose.model("Member", memberSchema);
