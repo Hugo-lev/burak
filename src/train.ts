@@ -1,27 +1,37 @@
-//O - Task
-function calculateSumOfNumbers(arr: any[]): number {
-  let sum: number = 0;
-
-  arr.forEach((item) => {
-    if (typeof item === "number") {
-      // Oddiy son
-      sum += item;
-    } else if (typeof item === "string" && !isNaN(Number(item))) {
-      // String bo‘lsa va son ko‘rinishida bo‘lsa
-      sum += Number(item);
-    } else if (typeof item === "object" && item !== null && "son" in item) {
-      // Object ichida 'son' property bo‘lsa
-      sum += Number((item as { son: number }).son);
-    }
-    // true/false yoki boshqa qiymatlar qo‘shilmaydi
-  });
-
-  return sum;
+// P-Task
+function objectToArray<T extends Record<string, any>>(obj: T): [string, any][] {
+  return Object.entries(obj);
 }
 
 // Misol:
-console.log(calculateSumOfNumbers([10, "10", { son: 10 }, true, 35]));
-// Natija: 45
+const result = objectToArray({ a: 10, b: 20 });
+console.log(result);
+// Natija: [["a", 10], ["b", 20]]
+
+// //O - Task
+// function calculateSumOfNumbers(arr: any[]): number {
+//   let sum: number = 0;
+
+//   arr.forEach((item) => {
+//     if (typeof item === "number") {
+//       // Oddiy son
+//       sum += item;
+//     } else if (typeof item === "string" && !isNaN(Number(item))) {
+//       // String bo‘lsa va son ko‘rinishida bo‘lsa
+//       sum += Number(item);
+//     } else if (typeof item === "object" && item !== null && "son" in item) {
+//       // Object ichida 'son' property bo‘lsa
+//       sum += Number((item as { son: number }).son);
+//     }
+//     // true/false yoki boshqa qiymatlar qo‘shilmaydi
+//   });
+
+//   return sum;
+// }
+
+// // Misol:
+// console.log(calculateSumOfNumbers([10, "10", { son: 10 }, true, 35]));
+// // Natija: 45
 
 // //N - Task
 // function palindromCheck(str: string): boolean {

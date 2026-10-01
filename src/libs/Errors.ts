@@ -13,6 +13,10 @@ export enum Message {
   NO_DATA_FOUND = "No data is found!",
   CREATE_FAILED = "Create is failed!",
   UPDATE_FAILED = "Update is failed!",
+  DELETE_FAILED = "Delete is failed!",
+  NO_PHONE_NUMBER = "Phone number is required!",
+  WRONG_PASSWORD = "Password is wrong!",
+  NO_NICKNAME = "Nickname is required!",
 }
 class Errors extends Error {
   public code: HttpCode;
