@@ -17,10 +17,16 @@ export enum Message {
   NO_PHONE_NUMBER = "Phone number is required!",
   WRONG_PASSWORD = "Password is wrong!",
   NO_NICKNAME = "Nickname is required!",
+  USED_NICKNAME_PHONE = "Nickname or phone number is already used!",
 }
 class Errors extends Error {
   public code: HttpCode;
   public message: Message;
+
+  static standard = {
+    code: HttpCode.INTERNAL_SERVER_ERROR,
+    message: Message.SOMETHING_WENT_WRONG,
+  };
 
   constructor(statusCode: HttpCode, statusMessage: Message) {
     super();

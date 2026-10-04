@@ -1,11 +1,17 @@
-// P-Task
-function objectToArray<T extends Record<string, any>>(obj: T): [string, any][] {
-  return Object.entries(obj);
+//Q-Task
+function hasProperty(obj: object, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(obj, key);
 }
+console.log(hasProperty({ name: "BMW", model: "M3" }, "model"));
+console.log(hasProperty({ name: "BMW", model: "M3" }, "year"));
+// // P-Task
+// function objectToArray<T extends Record<string, any>>(obj: T): [string, any][] {
+//   return Object.entries(obj);
+// }
 
-// Misol:
-const result = objectToArray({ a: 10, b: 20 });
-console.log(result);
+// // Misol:
+// const result = objectToArray({ a: 10, b: 20 });
+// console.log(result);
 // Natija: [["a", 10], ["b", 20]]
 
 // //O - Task
