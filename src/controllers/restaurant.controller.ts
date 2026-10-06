@@ -18,6 +18,7 @@ restaurantController.goHome = (req: Request, res: Response) => {
   }
 };
 restaurantController.getSignup = (req: Request, res: Response) => {
+  //
   try {
     console.log("getSignup");
     res.render("signup");
