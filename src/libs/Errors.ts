@@ -18,6 +18,7 @@ export enum Message {
   WRONG_PASSWORD = "Password is wrong!",
   NO_NICKNAME = "Nickname is required!",
   USED_NICKNAME_PHONE = "Nickname or phone number is already used!",
+  Not_Authenticated = "Not Authenticated!",
 }
 class Errors extends Error {
   public code: HttpCode;
