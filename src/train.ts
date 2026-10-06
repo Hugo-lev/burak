@@ -1,9 +1,18 @@
-//Q-Task
-function hasProperty(obj: object, key: string): boolean {
-  return Object.prototype.hasOwnProperty.call(obj, key);
+//R - Task
+function calculate(str: string): number {
+  const parts: string[] = str.split("+");
+  const numbers: number[] = parts.map((num) => Number(num));
+
+  const sum: number = numbers.reduce((a, b) => a + b, 0);
+
+  return sum;
 }
-console.log(hasProperty({ name: "BMW", model: "M3" }, "model"));
-console.log(hasProperty({ name: "BMW", model: "M3" }, "year"));
+
+// Misollar:
+console.log(calculate("1+3"));
+console.log(calculate("10+25"));
+console.log(calculate("7+8+9"));
+
 // // P-Task
 // function objectToArray<T extends Record<string, any>>(obj: T): [string, any][] {
 //   return Object.entries(obj);
