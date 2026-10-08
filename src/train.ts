@@ -1,17 +1,25 @@
-//R - Task
-function calculate(str: string): number {
-  const parts: string[] = str.split("+");
-  const numbers: number[] = parts.map((num) => Number(num));
-
-  const sum: number = numbers.reduce((a, b) => a + b, 0);
-
-  return sum;
+//S - task
+function missingNumber(nums: number[]): number {
+  const n = nums.length;
+  const expectedSum = (n * (n + 1)) / 2; // 0 dan n gacha bo'lgan sonlar yig'indisi
+  const actualSum = nums.reduce((acc, num) => acc + num, 0); // arraydagi sonlar yig'indisi
+  return expectedSum - actualSum;
 }
 
-// Misollar:
-console.log(calculate("1+3"));
-console.log(calculate("10+25"));
-console.log(calculate("7+8+9"));
+// //R - Task
+// function calculate(str: string): number {
+//   const parts: string[] = str.split("+");
+//   const numbers: number[] = parts.map((num) => Number(num));
+
+//   const sum: number = numbers.reduce((a, b) => a + b, 0);
+
+//   return sum;
+// }
+
+// // Misollar:
+// console.log(calculate("1+3"));
+// console.log(calculate("10+25"));
+// console.log(calculate("7+8+9"));
 
 // // P-Task
 // function objectToArray<T extends Record<string, any>>(obj: T): [string, any][] {
@@ -105,4 +113,4 @@ console.log(calculate("7+8+9"));
 // // Misollar:
 // console.log(countVowels("string"));
 // console.log(countVowels("hello"));
-// console.log(countVowels("TypeScript"));
+// console.log(countVowels("TypeScript"))
