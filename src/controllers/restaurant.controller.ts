@@ -3,7 +3,8 @@ import { T } from "../libs/types/common";
 import MemberService from "../models/Members.service";
 import { AdminRequest, LoginInput, MemberInput } from "../libs/types/member";
 import { MemberStatus, MemberType } from "../libs/enums/member.enums";
-import { Message } from "../libs/Errors";
+import { HttpCode, Message } from "../libs/Errors";
+import Errors from "../libs/Errors";
 
 const memberService = new MemberService();
 
@@ -43,16 +44,19 @@ restaurantController.processSignup = async (
 ) => {
   try {
     console.log("processSignup");
-    // console.log("body:", req.body);
+    const file = req.file;
+    if (!file)
+      throw new Errors(HttpCode.BAD_REQUEST, Message.SOMETHING_WENT_WRONG);
 
     const newMember: MemberInput = req.body;
+    newMember.memberImage = file?.path.replace(/\\/g, "/");
     newMember.memberType = MemberType.RESTAURANT;
     const result = await memberService.processSignup(newMember);
     //Todo: SESSION AUTHENTICATION
 
     req.session.member = result; //Yangi hozil bolgan restourant
     req.session.save(function () {
-      res.send(result);
+      res.redirect("/admin/product/all");
     });
   } catch (err) {
     console.log("Error, processSignup:", err);
@@ -97,7 +101,7 @@ restaurantController.processLogin = async (
     // Yozib BO'LGANDA ichidagi funksiya (callback) ishga tushadi.
     req.session.save(function () {
       // Javob faqat sessiya saqlangandan keyin yuboriladi.
-      res.send(result);
+      res.redirect("/admin/product/all");
     });
   } catch (err) {
     // Xato bo'lsa (nick yo'q, parol xato) → sessiyaga HECH NARSA yozilmaydi
@@ -145,7 +149,7 @@ restaurantController.verifyRestaurant = (
   next: NextFunction,
 ) => {
   try {
-    if (req.session?.member?.memberType === MemberType.RESTAURANT){
+    if (req.session?.member?.memberType === MemberType.RESTAURANT) {
       req.member = req.session.member;
       next();
     } else {
