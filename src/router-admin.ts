@@ -41,10 +41,10 @@ routerAdmin.post(
 routerAdmin.get(
   "/user/all",
   restaurantController.verifyRestaurant,
-  restaurantController.getUser,
+  restaurantController.getUsers,
 );
 routerAdmin.post(
-  "/user/edi t",
+  "/user/edit",
   restaurantController.verifyRestaurant,
   restaurantController.updateChosenUser,
 );
