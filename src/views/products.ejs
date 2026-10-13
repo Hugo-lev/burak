@@ -4,5 +4,12 @@
   <div>
     <div>Products Page</div>
     <div><%=member.memberNick%></div>
+
+    <%product.map((value, key)=>{%>
+      <p><$= value.productName %></p>
+    <%})%>
+
   </div>
 </body>
+
+<%- include('includes/footer')%>

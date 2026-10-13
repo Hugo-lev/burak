@@ -7,11 +7,13 @@ import ProductService from "../models/Product.service";
 
 const productController: T = {};
 
-productController.getAllProducts = (req: Request, res: Response) => {
+productController.getAllProducts = async (req: Request, res: Response) => {
   //
   try {
     console.log("getAllProducts");
-    res.render("products");
+    const data = await ProductService.getAllProducts();
+    console.log("data:", data);
+    res.render("products", { products: data });
   } catch (err) {
     console.log("Error, getAllProducts:", err);
     if (err instanceof Errors) res.status(err.code).json(err);
