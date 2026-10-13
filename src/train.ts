@@ -1,10 +1,30 @@
-//S - task
-function missingNumber(nums: number[]): number {
-  const n = nums.length;
-  const expectedSum = (n * (n + 1)) / 2; // 0 dan n gacha bo'lgan sonlar yig'indisi
-  const actualSum = nums.reduce((acc, num) => acc + num, 0); // arraydagi sonlar yig'indisi
-  return expectedSum - actualSum;
+//U - task
+function sumOdds(n: number): number {
+  return Math.floor((n + 1) / 2);
 }
+
+console.log(sumOdds(9));
+console.log(sumOdds(11)); //
+
+//T - Task
+
+// function mergeSortedArrays(arr1: number[], arr2: number[]): number[] {
+//   let mergedArray: number[] = [];
+//   let i = 0;
+//   let j = 0;
+
+//   // Ikkala arrayni solishtirib chiqamiz
+//   while (i < arr1.length && j < arr2.length) {
+//     if (arr1[i] < arr2[j]) {
+//       mergedArray.push(arr1[i]);
+//     }}}
+//S - task
+// function missingNumber(nums: number[]): number {
+//   const n = nums.length;
+//   const expectedSum = (n * (n + 1)) / 2; // 0 dan n gacha bo'lgan sonlar yig'indisi
+//   const actualSum = nums.reduce((acc, num) => acc + num, 0); // arraydagi sonlar yig'indisi
+//   return expectedSum - actualSum;
+// }
 
 // //R - Task
 // function calculate(str: string): number {
