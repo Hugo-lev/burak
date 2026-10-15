@@ -1,10 +1,23 @@
-//U - task
-function sumOdds(n: number): number {
-  return Math.floor((n + 1) / 2);
+// V- Task
+function countChars(str: string): Record<string, number> {
+  const result: Record<string, number> = {};
+
+  for (const char of str) {
+    result[char] = (result[char] || 0) + 1;
+  }
+
+  return result;
 }
 
-console.log(sumOdds(9));
-console.log(sumOdds(11)); //
+console.log(countChars("hello"));
+
+// //U - task
+// function sumOdds(n: number): number {
+//   return Math.floor((n + 1) / 2);
+// }
+
+// console.log(sumOdds(9));
+// console.log(sumOdds(11)); //
 
 //T - Task
 
