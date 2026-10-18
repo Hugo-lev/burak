@@ -1,28 +1,9 @@
 console.log("Signup frontend javascript file");
+
 $(function () {
   const fileTarget = $(".file-box .upload-hidden");
-  let filename;
 
-  // fileTarget.on("change", function () {
-  //   if (window.FileReader) {
-  //     const uploadFile = $(this)[0].files[0];
-  //     console.log("uloadFIle:", uploadFile);
-  //     const fileType = uploadFile("type");
-  //     const validImageType = ["image/jpg", "image/jpeg", "image/png"];
-  //     if (!validImageType.includes(fileType)) {
-  //       alert("please insert only jpeg, jpg, and pnj images");
-  //     } else {
-  //       if (uploadFile) {
-  //         console.log(URL.createObjectURL(uploadFile));
-  //         $(".upload-img-frame")
-  //           .attr("src", URL.createObjectURL(uploadFile))
-  //           .addClass("success");
-  //       }
-  //       filename = $(this)[0].files[0];
-  //     }
-  //     $(this).siblings(".upload-name").val(filename);
-  //   }
-  // });
+  let filename;
   fileTarget.on("change", function () {
     if (window.FileReader) {
       // files[0] → foydalanuvchi tanlagan birinchi fayl

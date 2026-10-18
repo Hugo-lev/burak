@@ -53,8 +53,15 @@ class MemberService {
     const exist = await this.memberModel
       .findOne({ memberType: MemberType.RESTAURANT })
       .exec();
-    // console.log("exist:", exist);
-    if (exist) throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
+
+    if (exist) {
+      // Terminalda shu qator chiqsa → sabab 1: bazada restoran bor
+      console.log(
+        "processSignup: bazada restoran allaqachon bor ->",
+        exist.memberNick,
+      );
+      throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
+    }
 
     const salt = await bcrypt.genSalt();
     input.memberPassword = await bcrypt.hash(input.memberPassword, salt);
@@ -64,6 +71,8 @@ class MemberService {
       result.memberPassword = "";
       return result;
     } catch (err) {
+      // Terminalda shu qator chiqsa → sabab 2: asl xato matni shu yerda ko'rinadi
+      console.error("processSignup: create xatosi ->", err);
       throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
     }
   }

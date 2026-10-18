@@ -5,14 +5,15 @@ import { ProductInput } from "../libs/types/product";
 import { AdminRequest } from "../libs/types/member";
 import ProductService from "../models/Product.service";
 
+// new → klassdan OBYEKT yaratadi. getAllProducts kabi usullar faqat shu obyektda ishlaydi.
+const productService = new ProductService();
+
 const productController: T = {};
 
 productController.getAllProducts = async (req: Request, res: Response) => {
-  //
   try {
     console.log("getAllProducts");
-    const data = await ProductService.getAllProducts();
-    console.log("data:", data);
+    const data = await productService.getAllProducts(); // kichik "p": obyekt
     res.render("products", { products: data });
   } catch (err) {
     console.log("Error, getAllProducts:", err);
@@ -27,26 +28,24 @@ productController.createNewProduct = async (
 ) => {
   try {
     console.log("createNewProduct");
-    console.log(req.files);
-
     if (!req.files?.length)
       throw new Errors(HttpCode.INTERNAL_SERVER_ERROR, Message.CREATE_FAILED);
 
     const data: ProductInput = req.body;
-    data.productImages = req.files?.map((ele) => {
-      return ele.path.replace(/\\/g, "/");
-    });
+    // Windows'dagi "\" belgisini "/" ga almashtirib, rasm yo'llarini saqlaymiz
+    data.productImages = req.files?.map((ele) => ele.path.replace(/\\/g, "/"));
 
-    await ProductService.createNewProduct(data);
+    await productService.createNewProduct(data);
     res.send(
-      `<script> alerts("SECESSFULLY CREATED!"; window.location.replace('admin/product/all')</script>)`,
+      `<script>alert("Successfully created!"); window.location.replace('/admin/product/all')</script>`,
     );
   } catch (err) {
     console.log("Error, createNewProduct:", err);
     const message =
       err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;
+    // JSON.stringify → xabar ichida ' yoki " bo'lsa ham skript buzilmaydi
     res.send(
-      `<script> alerts("SECESSFULLY CREATED!"; window.location.replace('admin/product/all')</script>)`,
+      `<script>alert(${JSON.stringify(message)}); window.location.replace('/admin/product/all')</script>`,
     );
   }
 };
@@ -55,8 +54,7 @@ productController.updateChosenProduct = async (req: Request, res: Response) => {
   try {
     console.log("updateChosenProduct");
     const id = req.params.id;
-
-    const result = await ProductService.updateChosenProduct(id, req.body);
+    const result = await productService.updateChosenProduct(id, req.body);
     res.status(HttpCode.OK).json({ data: result });
   } catch (err) {
     console.log("Error, updateChosenProduct:", err);
