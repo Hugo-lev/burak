@@ -3,24 +3,46 @@ $(function () {
   const fileTarget = $(".file-box .upload-hidden");
   let filename;
 
+  // fileTarget.on("change", function () {
+  //   if (window.FileReader) {
+  //     const uploadFile = $(this)[0].files[0];
+  //     console.log("uloadFIle:", uploadFile);
+  //     const fileType = uploadFile("type");
+  //     const validImageType = ["image/jpg", "image/jpeg", "image/png"];
+  //     if (!validImageType.includes(fileType)) {
+  //       alert("please insert only jpeg, jpg, and pnj images");
+  //     } else {
+  //       if (uploadFile) {
+  //         console.log(URL.createObjectURL(uploadFile));
+  //         $(".upload-img-frame")
+  //           .attr("src", URL.createObjectURL(uploadFile))
+  //           .addClass("success");
+  //       }
+  //       filename = $(this)[0].files[0];
+  //     }
+  //     $(this).siblings(".upload-name").val(filename);
+  //   }
+  // });
   fileTarget.on("change", function () {
     if (window.FileReader) {
+      // files[0] → foydalanuvchi tanlagan birinchi fayl
       const uploadFile = $(this)[0].files[0];
-      console.log("uloadFIle:", uploadFile);
-      const fileType = uploadFile("type");
+      if (!uploadFile) return; // fayl tanlash bekor qilingan bo'lsa to'xtaymiz
+
+      // Obyekt xossasiga NUQTA bilan murojaat qilinadi: uploadFile.type
+      const fileType = uploadFile.type;
       const validImageType = ["image/jpg", "image/jpeg", "image/png"];
+
       if (!validImageType.includes(fileType)) {
-        alert("please insert only jpeg, jpg, and pnj images");
+        alert("please insert only jpeg, jpg, and png images");
       } else {
-        if (uploadFile) {
-          console.log(URL.createObjectURL(uploadFile));
-          $(".upload-img-frame")
-            .attr("src", URL.createObjectURL(uploadFile))
-            .addClass("success");
-        }
-        filename = $(this)[0].files[0];
+        // createObjectURL → tanlangan faylning vaqtinchalik manzili (preview uchun)
+        $(".upload-img-frame")
+          .attr("src", URL.createObjectURL(uploadFile))
+          .addClass("success");
+        // Inputda fayl NOMI (matn) ko'rinadi, obyektning o'zi emas
+        $(this).siblings(".upload-name").val(uploadFile.name);
       }
-      $(this).siblings(".upload-name").val(filename);
     }
   });
 });

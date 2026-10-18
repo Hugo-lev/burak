@@ -11,9 +11,13 @@ routerAdmin
   //routerga get methodi orqali kelgan sorov login endpointni qonontlantrsa. restaurantController.getLogin methodi ishga tushadi.
   .post("/login/process", restaurantController.processLogin);
 
-routerAdmin
-  .get("/signup", restaurantController.getSignup)
-  .post("/signup/process", restaurantController.processSignup);
+routerAdmin.get("/signup", restaurantController.getSignup).post(
+  "/signup/process",
+  // multer controller'dan OLDIN turadi: u rasmni uploads/members ga saqlab, req.file ga joylaydi
+  // "memberImage" — signup.ejs dagi <input type="file" name="memberImage"> bilan AYNAN bir xil
+  makeUploader("members").single("memberImage"),
+  restaurantController.processSignup,
+);
 
 routerAdmin.get("/check-me", restaurantController.checkAuthSession);
 routerAdmin.get("/logout", restaurantController.logout);
