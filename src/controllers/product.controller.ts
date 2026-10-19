@@ -28,12 +28,14 @@ productController.createNewProduct = async (
 ) => {
   try {
     console.log("createNewProduct");
+    console.log("req:body", req.body);
     if (!req.files?.length)
       throw new Errors(HttpCode.INTERNAL_SERVER_ERROR, Message.CREATE_FAILED);
 
     const data: ProductInput = req.body;
-    // Windows'dagi "\" belgisini "/" ga almashtirib, rasm yo'llarini saqlaymiz
-    data.productImages = req.files?.map((ele) => ele.path.replace(/\\/g, "/"));
+    data.productImages = req.files?.map((ele) => {
+      return ele.path.replace(/\\/g, "/");
+    });
 
     await productService.createNewProduct(data);
     res.send(

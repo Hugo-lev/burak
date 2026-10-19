@@ -43,7 +43,8 @@ const productSchema = new Schema(
 
     productVolume: {
       type: Number,
-      enum: Object.values(ProductVolume),
+      // Enum ichidan faqat sonlarni ajratib oladi: [0.5, 1, 1.2, 1.5, 2]
+      enum: Object.values(ProductVolume).filter((v) => typeof v === "number"),
       default: ProductVolume.ONE,
     },
 

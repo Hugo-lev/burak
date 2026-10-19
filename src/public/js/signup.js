@@ -1,6 +1,7 @@
 console.log("Signup frontend javascript file");
 
 $(function () {
+  
   const fileTarget = $(".file-box .upload-hidden");
 
   let filename;
@@ -8,7 +9,6 @@ $(function () {
     if (window.FileReader) {
       // files[0] → foydalanuvchi tanlagan birinchi fayl
       const uploadFile = $(this)[0].files[0];
-      if (!uploadFile) return; // fayl tanlash bekor qilingan bo'lsa to'xtaymiz
 
       // Obyekt xossasiga NUQTA bilan murojaat qilinadi: uploadFile.type
       const fileType = uploadFile.type;
