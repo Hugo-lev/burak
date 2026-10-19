@@ -19,6 +19,7 @@ export enum Message {
   NO_NICKNAME = "Nickname is required!",
   USED_NICKNAME_PHONE = "Nickname or phone number is already used!",
   Not_Authenticated = "Not Authenticated!",
+  Blocked_User = "You have been BLOCKED!, Connect with Restaurant ",
 }
 class Errors extends Error {
   public code: HttpCode;
