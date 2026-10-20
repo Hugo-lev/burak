@@ -121,6 +121,7 @@ class MemberService {
     return result;
   }
 
+
   public async updateChosenUser(input: MemberUpdateInput): Promise<Member> {
     input._id = shapeIntoMongooseObjectId(input._id);
     const result = await this.memberModel
