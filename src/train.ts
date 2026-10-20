@@ -1,15 +1,15 @@
-function chunkArray<T>(arr: T[], size: number): T[][] {
-  if (size <= 0) throw new Error("Size must be greater than 0");
+// function chunkArray<T>(arr: T[], size: number): T[][] {
+//   if (size <= 0) throw new Error("Size must be greater than 0");
 
-  const result: T[][] = [];
-  for (let i = 0; i < arr.length; i += size) {
-    result.push(arr.slice(i, i + size));
-  }
-  return result;
-}
+//   const result: T[][] = [];
+//   for (let i = 0; i < arr.length; i += size) {
+//     result.push(arr.slice(i, i + size));
+//   }
+//   return result;
+// }
 
-const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-console.log(chunkArray(data, 3));
+// const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+// console.log(chunkArray(data, 3));
 
 // V- Task
 // function countChars(str: string): Record<string, number> {
