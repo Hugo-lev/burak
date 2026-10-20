@@ -1,26 +1,31 @@
 export enum HttpCode {
   OK = 200,
-  CREATED = 201,
-  NOT_MODIFIED = 304,
   BAD_REQUEST = 400,
   UNAUTHORIZED = 401,
   FORBIDDEN = 403,
   NOT_FOUND = 404,
   INTERNAL_SERVER_ERROR = 500,
+  NOT_MODIFIED = 304,
 }
+
 export enum Message {
-  SOMETHING_WENT_WRONG = "Something went wrong!",
-  NO_DATA_FOUND = "No data is found!",
-  CREATE_FAILED = "Create is failed!",
-  UPDATE_FAILED = "Update is failed!",
-  DELETE_FAILED = "Delete is failed!",
-  NO_PHONE_NUMBER = "Phone number is required!",
-  WRONG_PASSWORD = "Password is wrong!",
-  NO_NICKNAME = "Nickname is required!",
-  USED_NICKNAME_PHONE = "Nickname or phone number is already used!",
-  Not_Authenticated = "Not Authenticated!",
-  Blocked_User = "You have been BLOCKED!, Connect with Restaurant ",
+  SOMETHING_WENT_WRONG = "Something went wrong !",
+  NO_DATA_FOUND = "No data found !",
+  CREATED_FAILED = "Created failed !",
+  UPDATE_FAILED = "Update failed !",
+  BAD_REQUEST = "Bad Request !",
+  UNAUTHORIZED = "Unauthorized !",
+  FORBIDDEN = "Forbidden !",
+  NOT_FOUND = "Not Found !",
+  INTERNAL_SERVER_ERROR = "Internal Server Error !",
+
+  NO_MEMBER_NICK = "No member with this nickname !",
+  BLOCKED_USER = "You have been blocked, Contact restaurant",
+  USED_NICK_PHONE = "This nickname or phone number is already used !",
+  WRONG_PASSWORD = "Wrong password inserted , please try again !",
+  NOT_AUTHENTICATED = "You are not logged in !",
 }
+
 class Errors extends Error {
   public code: HttpCode;
   public message: Message;
@@ -30,10 +35,11 @@ class Errors extends Error {
     message: Message.SOMETHING_WENT_WRONG,
   };
 
-  constructor(statusCode: HttpCode, statusMessage: Message) {
+  constructor(code: HttpCode, message: Message) {
     super();
-    this.code = statusCode;
-    this.message = statusMessage;
+    this.code = code;
+    this.message = message;
   }
 }
+
 export default Errors;

@@ -4,25 +4,27 @@ import restaurantController from "./controllers/restaurant.controller";
 import productController from "./controllers/product.controller";
 import makeUploader from "./libs/utils/uploder";
 
+/** Restaurants**/
+
 routerAdmin.get("/", restaurantController.goHome);
 
 routerAdmin
   .get("/login", restaurantController.getLogin)
-  //routerga get methodi orqali kelgan sorov login endpointni qonontlantrsa. restaurantController.getLogin methodi ishga tushadi.
-  .post("/login/process", restaurantController.processLogin);
+  .post("/login", restaurantController.processLogin);
 
 routerAdmin
   .get("/signup", restaurantController.getSignup)
   .post(
-    "/signup/process",
+    "/signup",
     makeUploader("members").single("memberImage"),
     restaurantController.processSignup,
   );
 
-routerAdmin.get("/check-me", restaurantController.checkAuthSession);
 routerAdmin.get("/logout", restaurantController.logout);
+routerAdmin.get("/check-me", restaurantController.checkAuthsession);
 
-//Products
+/** Products**/
+
 routerAdmin.get(
   "/product/all",
   restaurantController.verifyRestaurant,
@@ -40,16 +42,16 @@ routerAdmin.post(
   productController.updateChosenProduct,
 );
 
-/** User */
+/** Users Member controller**/
 routerAdmin.get(
   "/user/all",
   restaurantController.verifyRestaurant,
   restaurantController.getUsers,
 );
+
 routerAdmin.post(
   "/user/edit",
   restaurantController.verifyRestaurant,
   restaurantController.updateChosenUser,
 );
-
 export default routerAdmin;

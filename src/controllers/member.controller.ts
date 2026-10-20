@@ -5,33 +5,39 @@ import { LoginInput, Member, MemberInput } from "../libs/types/member";
 import Errors from "../libs/Errors";
 
 const memberService = new MemberService();
-
 const memberController: T = {};
+
 memberController.signup = async (req: Request, res: Response) => {
   try {
-    console.log("processSignup");
-    // console.log("body:", req.body);
+    console.log(" Sign Up");
+
+    // TODOS: TOKENS Authentication
 
     const input: MemberInput = req.body,
       result: Member = await memberService.signup(input);
 
     res.json({ member: result });
   } catch (err) {
-    console.log("Error, processSignup:", err);
+    console.log("Error Sign up ", err);
     if (err instanceof Errors) res.status(err.code).json(err);
     else res.status(Errors.standard.code).json(Errors.standard);
   }
 };
+
 memberController.login = async (req: Request, res: Response) => {
   try {
     console.log("Login");
+
+    // TODOS: TOKENS Authentication
+
     const input: LoginInput = req.body,
       result = await memberService.login(input);
+
     res.json({ member: result });
-  } catch (err: unknown) {
-    console.log("Error, processLogin:", err);
-    const errorMessage = err instanceof Error ? err.message : "Unknown error";
-    res.json({ error: errorMessage });
+  } catch (err) {
+    console.log("Error  Login ", err);
+    if (err instanceof Errors) res.status(err.code).json(err);
+    else res.status(Errors.standard.code).json(Errors.standard);
   }
 };
 
