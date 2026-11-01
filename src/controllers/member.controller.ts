@@ -39,21 +39,28 @@ memberController.signup = async (req: Request, res: Response) => {
 
 memberController.login = async (req: Request, res: Response) => {
   try {
-    console.log("Login");
+    console.log("login");
 
-    // TODOS: TOKENS Authentication
+    const input: LoginInput = req.body;
 
-    const input: LoginInput = req.body,
-      result = await memberService.login(input),
-      token = authService.createToken(result);
+    // 1) Bazadan foydalanuvchini tekshiramiz (nick va parol)
+    const result = await memberService.login(input);
+
+    // 2) Token yasaymiz.
+    // createToken Promise qaytaradi, "await" tokenning o'zini kutib oladi.
+    // Oldin "await" yo'q edi, shuning uchun token o'rniga Promise cookie ga yozilgan.
+    const token = await authService.createToken(result); // ✅
+
+    // 3) Tokenni cookie ga yozamiz (24 soat)
     res.cookie("accessToken", token, {
-      maxAge: AUTH_TIMER * 3600 * 1000,
+      maxAge: AUTH_TIMER * 3600 * 1000, // soat → millisekund
       httpOnly: false,
     });
 
+    // 4) Javob
     res.status(HttpCode.OK).json({ member: result, accessToken: token });
   } catch (err) {
-    console.log("Error  Login ", err);
+    console.log("Error Login ", err);
     if (err instanceof Errors) res.status(err.code).json(err);
     else res.status(Errors.standard.code).json(Errors.standard);
   }
@@ -90,13 +97,24 @@ memberController.verifyAuth = async (
   next: NextFunction,
 ) => {
   try {
+    // cookie-parser sabab cookie lar req.cookies ichida turadi
     const token = req.cookies["accessToken"];
-    if (token) req.member = await authService.checkAuth(token);
 
-    if (!req.member)
-      throw new Errors(HttpCode.UNAUTHORIZED, Message.UNAUTHORIZED);
-    next();
-    // Implementation for verifying token
+    // Token umuman yo'q: foydalanuvchi login qilmagan
+    if (!token) {
+      throw new Errors(HttpCode.UNAUTHORIZED, Message.NOT_AUTHENTICATED);
+    }
+
+    try {
+      // Token to'g'ri bo'lsa ichidagi Member qaytadi.
+      // Buzilgan yoki muddati o'tgan bo'lsa jwt o'zi xato tashlaydi.
+      req.member = await authService.checkAuth(token);
+    } catch {
+      // ✅ jwt xatosini 500 emas, 401 ga aylantiramiz
+      throw new Errors(HttpCode.UNAUTHORIZED, Message.NOT_AUTHENTICATED);
+    }
+
+    next(); // hammasi joyida: keyingi funksiyaga (controller ga) o'tkazamiz
   } catch (err) {
     console.log("Error verifying token ", err);
     if (err instanceof Errors) res.status(err.code).json(err);
