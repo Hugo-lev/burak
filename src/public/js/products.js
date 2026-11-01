@@ -1,17 +1,20 @@
 console.log("Products frontend javascript file");
 
 $(function () {
+  //foydalanuvchi mahsulot turini almashtrayotganda bu funuction ishledi
   $(".product-collection").on("change", () => {
+    // agar tanlagan mahsuloti Drink bolsa qolgan mahsulotlat colleksiyasi yashrinib uning hajmiga otadi
     const selectedValue = $(".product-collection").val();
     if (selectedValue === "DRINK") {
       $("#product-collection").hide();
       $("#product-volume").show();
     } else {
+      //aks holda hajmi yashrinib kolleksiya oynsi korsatiladi
       $("#product-volume").hide();
       $("#product-collection").show();
     }
   });
-
+// foydalanuvchi yangi mahsulot qoshish tugamsini bosganda forma joylashga konteyner bir tekizda ochiladi. va qoshish tugamisni ozi korinmedgon qlb qoyadi
   $("#process-btn").on("click", () => {
     $(".dish-container").slideToggle(500);
     $("#process-btn").css("display", "none");
@@ -82,4 +85,4 @@ function previewFileHandler(input, order) {
       reader.readAsDataURL(file);
     }
   }
-}
+}  

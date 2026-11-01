@@ -6,6 +6,7 @@ export enum HttpCode {
   NOT_FOUND = 404,
   INTERNAL_SERVER_ERROR = 500,
   NOT_MODIFIED = 304,
+  CREATED,
 }
 
 export enum Message {
@@ -24,6 +25,7 @@ export enum Message {
   USED_NICK_PHONE = "This nickname or phone number is already used !",
   WRONG_PASSWORD = "Wrong password inserted , please try again !",
   NOT_AUTHENTICATED = "You are not logged in !",
+  TOKEN_CREATION_FAILED = "tpken creation is error",
 }
 
 class Errors extends Error {
