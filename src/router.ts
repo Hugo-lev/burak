@@ -4,6 +4,11 @@ const router = express.Router();
 
 router.post("/member/login", memberController.login);
 router.post("/member/signup", memberController.signup);
-router.get("/member/detail", memberController.verifyToken);
+router.post(
+  "/member/logout",
+  memberController.verifyAuth,
+  memberController.logout,
+);
+router.get("/member/detail", memberController.verifyAuth);
 
 export default router;
