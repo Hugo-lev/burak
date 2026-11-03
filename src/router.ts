@@ -2,7 +2,11 @@ import express from "express";
 import memberController from "./controllers/member.controller";
 import uploader from "./libs/utils/uploder";
 const router = express.Router();
-router.get("/member/restautrant", memberController.getRestaurant);
+router.get(
+  "/member/restautrant",
+  memberController.verifyAuth,
+  memberController.getRestaurant,
+);
 router.post("/member/login", memberController.login);
 router.post("/member/signup", memberController.signup);
 router.post(
@@ -21,5 +25,9 @@ router.post(
   uploader("members").single("memberImage"),
   memberController.updateMember,
 );
-router.get("/member/top-users", memberController.getTopUsers);
+router.get(
+  "/member/top-users",
+  memberController.vrifyAuth,
+  memberController.getTopUsers,
+);
 export default router;
