@@ -2,7 +2,7 @@ import express from "express";
 import memberController from "./controllers/member.controller";
 import uploader from "./libs/utils/uploder";
 const router = express.Router();
-
+router.get("/member/restautrant", memberController.getRestaurant);
 router.post("/member/login", memberController.login);
 router.post("/member/signup", memberController.signup);
 router.post(
