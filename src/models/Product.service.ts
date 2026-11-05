@@ -10,43 +10,49 @@ import { shapeIntoMongooseObjectId } from "../libs/config";
 import { T } from "../libs/types/common";
 import { ProductStatus } from "../libs/enums/product.enums";
 import { ObjectId } from "mongoose";
+import { ViewGroup } from "../libs/enums/view.enums";
+import { ViewInput } from "../libs/types/view";
 
 class ProductService {
   private readonly productModel;
+  viewService: any;
 
   constructor() {
     this.productModel = ProductModel;
   }
 
-  /**SPA*/
-  public async getProducts(inquery: ProductInquiry): Promise<Product[]> {
-    const match: T = { ProductStatus: ProductStatus.PROCESS };
-    if (inquery.productCollection)
-      match.productCollection = inquery.productCollection;
-    if (inquery.search) {
-      match.ProductName = { $regex: new RegExp(inquery.search, "i") };
-    }
+  /** SPA */
+  public async getProducts(inquiry: ProductInquiry): Promise<Product[]> {
+    const match: T = { productStatus: ProductStatus.PROCESS };
+
+    if (inquiry.productCollection)
+      match.productCollection = inquiry.productCollection;
+    if (inquiry.search)
+      match.productName = { $regex: new RegExp(inquiry.search, "i") };
     const sort: T =
-      inquery.order === "productPrice"
-        ? { [inquery.order]: 1 }
-        : { [inquery.order]: -1 };
+      inquiry.order === "productPrice"
+        ? { [inquiry.order]: 1 }
+        : { [inquiry.order]: -1 };
+
     const result = await this.productModel
       .aggregate([
         { $match: match },
         { $sort: sort },
-        { $skip: (inquery.page * 1 - 3) * inquery.limit },
-        { $limit: inquery.limit * 1 },
+        { $skip: (inquiry.page * 1 - 1) * inquiry.limit },
+        { $limit: inquiry.limit * 1 },
       ])
       .exec();
     if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
 
     return result;
   }
+
   public async getProduct(
     memberId: ObjectId | null,
     id: string,
   ): Promise<Product> {
     const productId = shapeIntoMongooseObjectId(id);
+
     let result = await this.productModel
       .findOne({
         _id: productId,
@@ -54,7 +60,35 @@ class ProductService {
       })
       .exec();
     if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
-    //TODO if authenticated users=> first => view log creation
+
+    if (memberId) {
+      // Check View Log Existence
+      const input: ViewInput = {
+        memberId: memberId,
+        viewRefId: productId,
+        viewGroup: ViewGroup.PRODUCT,
+      };
+
+      const existView = await this.viewService.checkViewExistence(input);
+
+      // Insert New View Log
+      if (!existView) {
+        // Insert View
+        console.log("PLANNING TO INSERT NEW VIEW");
+        await this.viewService.insertMemberView(input);
+
+        // Increase Counts
+        const updated = await this.productModel
+          .findByIdAndUpdate(
+            productId,
+            { $inc: { productViews: +1 } },
+            { new: true },
+          )
+          .exec();
+        if (updated) result = updated;
+      }
+    }
+
     return result;
   }
 
