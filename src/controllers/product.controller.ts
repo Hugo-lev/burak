@@ -5,6 +5,7 @@ import { ProductInput, ProductInquiry } from "../libs/types/product";
 import { AdminRequest, ExtendedRequest } from "../libs/types/member";
 import ProductService from "../models/Product.service";
 import { ProductCollection } from "../libs/enums/product.enums";
+import { ObjectId } from "mongoose";
 
 // new → klassdan OBYEKT yaratadi. getAllProducts kabi usullar faqat shu obyektda ishlaydi.
 const productService = new ProductService();
@@ -31,14 +32,17 @@ productController.getProducts = async (req: Request, res: Response) => {
     else res.status(Errors.standard.code).json(Errors.standard);
   }
 };
-productController.getProduct = async (req: ExtendedRequest, res: Response) => {
+productController.getProduct = async (
+  req: ExtendedRequest & { params: { id: string } },
+  res: Response,
+) => {
   try {
     console.log("getProduct");
     const { id } = req.params;
-    const memberId = req.member?._id ?? null,
-      result = await productService.getProduct(memberId, id);
+    const memberId: ObjectId | null = req.member?._id ?? null;
+    const result = await productService.getProduct(memberId, id);
 
-    // res.status(HttpCode.OK).json(result);
+    res.status(HttpCode.OK).json(result);
   } catch (err) {
     console.log("Error, getProduct:", err);
     if (err instanceof Errors) res.status(err.code).json(err);

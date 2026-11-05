@@ -18,15 +18,16 @@ class MemberService {
   }
 
   /**SPA*/
-  public async getRestaurant(): Promise<Member> {
+   public async getRestaurant(): Promise<Member> {
     const result = await this.memberModel
       .findOne({ memberType: MemberType.RESTAURANT })
-      .lean()
+      .lean() // lean documnet returns a plain JavaScript object instead of a Mongoose document, which can improve performance and reduce memory usage when you don't need the full functionality of a Mongoose document.
       .exec();
+    result.iron = "ayron"; // test
     if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+
     return result;
   }
-
   public async signup(input: MemberInput): Promise<Member> {
     const salt = await bcrypt.genSalt();
     input.memberPassword = await bcrypt.hash(input.memberPassword, salt);
@@ -34,38 +35,34 @@ class MemberService {
     try {
       const result = await this.memberModel.create(input);
       result.memberPassword = "";
+
       return result.toJSON();
     } catch (err) {
-      console.error("Error , model Sign up: ", err);
+      console.error("Error, model:signup");
       throw new Errors(HttpCode.BAD_REQUEST, Message.USED_NICK_PHONE);
     }
-
-    // const tempResult = new this.memberModel(input);
-    // const result = await tempResult.save();
-    // result.memberPassword = "";
   }
-
   public async login(input: LoginInput): Promise<Member> {
     const member = await this.memberModel
       .findOne(
         {
           memberNick: input.memberNick,
-          memberStatus: { $ne: MemberStatus.DELETE },
+          memberStatus: { $ne: MemberStatus.DELETE }, //statusiini ham inobadga oldik
         },
         { memberNick: 1, memberPassword: 1, memberStatus: 1 },
       )
       .exec();
-
     if (!member) throw new Errors(HttpCode.NOT_FOUND, Message.NO_MEMBER_NICK);
     else if (member.memberStatus === MemberStatus.BLOCK) {
       throw new Errors(HttpCode.FORBIDDEN, Message.BLOCKED_USER);
     }
 
+    console.log("member:", member);
+
     const isMatch = await bcrypt.compare(
       input.memberPassword,
-      member.memberPassword!,
+      member.memberPassword,
     );
-
     if (!isMatch) {
       throw new Errors(HttpCode.UNAUTHORIZED, Message.WRONG_PASSWORD);
     }
@@ -81,24 +78,28 @@ class MemberService {
 
     return result;
   }
-
   public async updateMember(
     member: Member,
     input: MemberUpdateInput,
   ): Promise<Member> {
     const memberId = shapeIntoMongooseObjectId(member._id);
     const result = await this.memberModel
-      .findByIdAndUpdate({ _id: memberId }, input, { new: true })
+      .findOneAndUpdate({ _id: memberId }, input, { new: true })
       .exec();
     if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
     return result;
   }
   public async getTopUsers(): Promise<Member[]> {
     const result = await this.memberModel
-      .find({ memberStatus: MemberStatus.ACTIVE, memberPoints: { $gte: 1 } })
+      .find({
+        memberStatus: MemberStatus.ACTIVE,
+        memberPoints: { $gte: 1 },
+      })
       .sort({ memberPoints: -1 })
       .limit(4)
       .exec();
+    if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+
     return result;
   }
   /**SSR*/
