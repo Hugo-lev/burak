@@ -12,13 +12,15 @@ import { ProductStatus } from "../libs/enums/product.enums";
 import { ObjectId } from "mongoose";
 import { ViewGroup } from "../libs/enums/view.enums";
 import { ViewInput } from "../libs/types/view";
+import ViewService from "./view.service";
 
 class ProductService {
   private readonly productModel;
-  viewService: any;
+  public viewService;
 
   constructor() {
     this.productModel = ProductModel;
+    this.viewService = new ViewService();
   }
 
   /** SPA */

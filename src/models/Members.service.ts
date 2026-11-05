@@ -18,12 +18,11 @@ class MemberService {
   }
 
   /**SPA*/
-   public async getRestaurant(): Promise<Member> {
+  public async getRestaurant(): Promise<Member> {
     const result = await this.memberModel
       .findOne({ memberType: MemberType.RESTAURANT })
       .lean() // lean documnet returns a plain JavaScript object instead of a Mongoose document, which can improve performance and reduce memory usage when you don't need the full functionality of a Mongoose document.
       .exec();
-    result.iron = "ayron"; // test
     if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
 
     return result;
@@ -38,7 +37,7 @@ class MemberService {
 
       return result.toJSON();
     } catch (err) {
-      console.error("Error, model:signup");
+      console.error("Error, model:signup", err);
       throw new Errors(HttpCode.BAD_REQUEST, Message.USED_NICK_PHONE);
     }
   }
@@ -56,8 +55,6 @@ class MemberService {
     else if (member.memberStatus === MemberStatus.BLOCK) {
       throw new Errors(HttpCode.FORBIDDEN, Message.BLOCKED_USER);
     }
-
-    console.log("member:", member);
 
     const isMatch = await bcrypt.compare(
       input.memberPassword,
