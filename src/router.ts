@@ -1,5 +1,6 @@
 import express from "express";
 import memberController from "./controllers/member.controller";
+import productController from "./controllers/product.controller";
 import uploader from "./libs/utils/uploder";
 const router = express.Router();
 router.get(
@@ -30,4 +31,6 @@ router.get(
   memberController.verifyAuth,
   memberController.getTopUsers,
 );
+/**Products */
+router.get("/product/all", productController.getProducts);
 export default router;
