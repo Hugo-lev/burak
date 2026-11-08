@@ -42,4 +42,9 @@ router.get(
   memberController.verifyAuth,
   orderController.getMyOrders,
 );
+router.post(
+  "/order/update",
+  orderController.verifyAuth,
+  orderController.updateOrder,
+);
 export default router;
