@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import { OrderStatus } from "../libs/enums/order.enums";
 const orderSchema = new Schema(
   {
-    orderTotal: { typr: Number, required: true },
+    orderTotal: { type: Number, required: true },
     orderDelivery: { type: Number, required: true },
     orderStatus: {
       type: String,

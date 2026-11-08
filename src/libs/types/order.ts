@@ -15,7 +15,7 @@ export interface Order {
   orderTotal: number;
   orderDelivery: number;
   orderStatus: OrderStatus;
-  memberIt: ObjectId;
+  memberId: ObjectId;
   createAt: Date;
   updateAt: Date;
   // From aggregations

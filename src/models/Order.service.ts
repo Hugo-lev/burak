@@ -1,3 +1,4 @@
+import { ObjectId } from "mongoose";
 import { shapeIntoMongooseObjectId } from "../libs/config";
 import { OrderStatus } from "../libs/enums/order.enums";
 import Errors, { HttpCode, Message } from "../libs/Errors";
@@ -8,7 +9,7 @@ import {
   OrderItemInput,
   OrderUpdateInput,
 } from "../libs/types/order";
-import orderModel from "../schema/order.model";
+import orderModel from "../schema/Order.model";
 import OrderitemModel from "../schema/Orderitem.model";
 import MemberService from "./Members.service";
 
@@ -69,7 +70,7 @@ class OrderService {
     const result = await this.orderModel
       .aggregate([
         { $match: matches },
-        { $sort: { updateAt: -1 } },
+        { $sort: { updatedAt: -1 } },
         { $skip: (inquiry.page - 1) * inquiry.limit },
         { $limit: inquiry.limit },
         {
@@ -113,7 +114,8 @@ class OrderService {
         { new: true },
       )
       .exec();
-    if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
+
+    throw new Errors(HttpCode.NOT_FOUND, Message.UPDATE_FAILED);
 
     if (orderStatus === OrderStatus.PROCESS) {
       await this.memberService.addUserPoint(member, 1);
