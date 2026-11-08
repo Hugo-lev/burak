@@ -114,8 +114,7 @@ class OrderService {
         { new: true },
       )
       .exec();
-
-    throw new Errors(HttpCode.NOT_FOUND, Message.UPDATE_FAILED);
+    if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
 
     if (orderStatus === OrderStatus.PROCESS) {
       await this.memberService.addUserPoint(member, 1);
