@@ -1,113 +1,66 @@
+import cors from "cors";
 import express from "express";
 import path from "path";
 import router from "./router";
 import routerAdmin from "./router-admin";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
 import { MORGAN_FORMAT } from "./libs/config";
+//
 import session from "express-session";
 import ConnectMongoDB from "connect-mongodb-session";
 import { T } from "./libs/types/common";
-import CookieParser from "cookie-parser";
 
 const MongoDBStore = ConnectMongoDB(session);
 const store = new MongoDBStore({
-  uri: String(process.env.MONGO_URI),
+  uri: String(process.env.MONGO_URL),
   collection: "sessions",
 });
-
-/**1-Enterence**/
+/** 1-ENTRANCE **/
 const app = express();
-console.log("__dirname", __dirname);
 app.use(express.static(path.join(__dirname, "public")));
-app.use("/uploads", express.static("./uploads"));
+app.use("/uploads", express.static("./uploads")); // yuklangan rasmlar shu yerdan beriladi (frontend: serverApi + "/uploads/...")
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(morgan(MORGAN_FORMAT)); //logging
-app.use(CookieParser()); //cookie parser
 
-/**2-sessions**/
-// app.use(
-//   session({
-//     secret: String(process.env.SESSION_SECRET),
-//     cookie: { maxAge: 1000 * 3600 * 3 }, //3 hours
-//     store: store,
-//     resave: true,
-//     saveUninitialized: true,
-//   }),
-// );
-/* ============================================================
- *  SESSION SOZLAMASI
- *  Vazifasi: foydalanuvchi tizimga kirgandan keyin server uni
- *  eslab qolishi uchun (cookie + session).
- *
- *  Muhim: bu kod routerAdmin'dan OLDIN turishi shart!
- *  Aks holda controller'da req.session = undefined bo'ladi.
- * ============================================================ */
-
+// ✅ YANGI — CORS sozlamasi (routerlardan OLDIN turishi shart!)
 app.use(
-  // app.use() = "har bir so'rovda shu middleware'ni ishga tushir"
+  cors({
+    credentials: true, // cookie (JWT token) yuborishga va qabul qilishga ruxsat
+    origin: true, // so'rov qaysi origin'dan kelsa, shuni qaytarib ruxsat beradi (hamma uchun ochiq)
+  }),
+);
+
+app.use(cookieParser());
+app.use(morgan(MORGAN_FORMAT));
+
+/** 2-SESSIONS **/
+app.use(
   session({
-    /* ------------------------------------------------------
-     * 1) SECRET (maxfiy so'z)
-     * Cookie ichidagi session ID shu so'z bilan IMZOLANADI.
-     * Hujumchi ID'ni soxtalashtirsa, imzo mos kelmaydi va
-     * server uni rad etadi.
-     *
-     * Qiymati .env faylidan olinadi: SESSION_SECRET=uzun_tasodifiy_soz
-     * String() = TypeScript uchun (qiymat aniq matn ekanini bildiradi)
-     * ------------------------------------------------------ */
     secret: String(process.env.SESSION_SECRET),
-
-    /* ------------------------------------------------------
-     * 2) COOKIE sozlamalari
-     * maxAge = cookie qancha yashashi (MILLISEKUNDDA).
-     *
-     *   1000            = 1 sekund
-     *   1000 * 3600     = 1 soat
-     *   1000 * 3600 * 3 = 3 soat
-     *
-     * 3 soatdan keyin brauzer cookie'ni o'chiradi va
-     * foydalanuvchi qaytadan login qilishi kerak bo'ladi.
-     * ------------------------------------------------------ */
-    cookie: { maxAge: 1000 * 3600 * 3 }, // 3 soat
-
-    /* ------------------------------------------------------
-     * 3) STORE (saqlash joyi)
-     * Sessiyalar qayerda saqlanadi? Bizda MongoDB'da
-     * ("sessions" collection). Shu sababli nodemon server'ni
-     * qayta ishga tushirsa ham login yo'qolmaydi.
-     *
-     * store o'zgaruvchisi fayl tepasida yaratilgan bo'lishi kerak.
-     * ------------------------------------------------------ */
+    cookie: {
+      maxAge: 1000 * 3600 * 6, // 6 hours
+    },
     store: store,
-
-    /* ------------------------------------------------------
-     * 4) RESAVE
-     * true  = sessiya o'zgarmagan bo'lsa ham har so'rovda qayta yoziladi
-     * false = faqat o'zgargandagina yoziladi (tavsiya etiladi)
-     * ------------------------------------------------------ */
     resave: true,
-
-    /* ------------------------------------------------------
-     * 5) SAVE UNINITIALIZED
-     * true  = login qilmagan mehmon uchun ham bo'sh sessiya yaratiladi
-     * false = sessiyaga biror narsa yozilgandagina yaratiladi (tavsiya etiladi)
-     * ------------------------------------------------------ */
     saveUninitialized: true,
   }),
 );
+//midleware
 app.use(function (req, res, next) {
   const sessionInstance = req.session as T;
-  res.locals.member = sessionInstance; //views uchun
+  res.locals.member = sessionInstance.member;
   next();
 });
-/**3-views**/
+/** 3-VIEWS **/
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
-/**4-routers**/
-//SSR: EJS
-app.use("/admin", routerAdmin);
-app.use("/", router); //middleware for routing design patterns
+/** 4-ROUTERS **/
+app.use("/admin", routerAdmin); //ssr
+app.use("/", router); // React
 
-export default app; //module.exports = app;
+export default app;
+
+// EJS
+// REACT

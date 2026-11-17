@@ -4,7 +4,13 @@ import {
   ProductSize,
   ProductStatus,
 } from "../enums/product.enums";
-
+export interface ProductInquiry {
+  order: string;
+  page: number;
+  limit: number;
+  productCollection?: ProductCollection;
+  search?: string;
+}
 export interface Product {
   _id: ObjectId;
   productStatus: ProductStatus;
@@ -12,19 +18,13 @@ export interface Product {
   productName: string;
   productPrice: number;
   productLeftCount: number;
-  productSize?: ProductSize;
-  productValume?: number;
-  productDesc: string;
+  productSize: ProductSize;
+  productVolume: number;
+  productDesc?: string;
   productImages: string[];
   productViews: number;
-}
-
-export interface ProductInquiry {
-  order: string;
-  page: number;
-  limit: number;
-  productCollection?: ProductCollection;
-  search?: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface ProductInput {
@@ -34,8 +34,8 @@ export interface ProductInput {
   productPrice: number;
   productLeftCount: number;
   productSize?: ProductSize;
-  productValume?: number;
-  productDesc: string;
+  productVolume?: number;
+  productDesc?: string;
   productImages?: string[];
   productViews?: number;
 }
@@ -47,7 +47,7 @@ export interface ProductUpdateInput {
   productPrice?: number;
   productLeftCount?: number;
   productSize?: ProductSize;
-  productValume?: number;
+  productVolume?: number;
   productDesc?: string;
   productImages?: string[];
   productViews?: number;
