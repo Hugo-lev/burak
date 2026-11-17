@@ -13,7 +13,8 @@ import { T } from "./libs/types/common";
 
 const MongoDBStore = ConnectMongoDB(session);
 const store = new MongoDBStore({
-  uri: String(process.env.MONGO_URL),
+  // app.ts, 16-qator: serverdagi nomga moslang
+  uri: String(process.env.MONGO_URI),
   collection: "sessions",
 });
 /** 1-ENTRANCE **/

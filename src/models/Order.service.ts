@@ -130,7 +130,7 @@ class OrderService {
       )
       .exec();
 
-    if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
+    if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.UPDATE_FAILED);
 
     if (orderStatus === OrderStatus.PROCESS)
       // ✅ Agar buyurtma PROCESS (to`lov qilindi) holatiga o`tsa
